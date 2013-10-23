@@ -1,0 +1,10 @@
+{
+  "name": "shortenr",
+  "description": "URL shortener",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "3.4.2",
+    "dustjs-linkedin": "2.0.3",
+    "consolidate": "0.9.1"
+  }
+}
