@@ -1,5 +1,12 @@
-var map = [];
+var levelup = require('level');
+var db = levelup('./db');
+var counterKey = '0'; // This won't be a URL key, so it's safe
 var counter = 2;
+
+db.get(counterKey, function (err, value) {
+  if (err) return console.log(err);
+  counter = value;
+});
 
 /* GET home page */
 exports.home = function (req, res) {
@@ -17,14 +24,22 @@ exports.create = function (req, res) {
   hash = hash.replace(/=/g, '');
   counter++;
 
-  map[hash] = url;
+  db.put(hash, url, function (err) {
+    if (err) {
+      console.log(err);
+    }
 
-  res.json('Pretend you created something: http://localhost:3000/' + hash);
+    res.json('http://localhost:3000/' + hash);
+  });
+
+  db.put(counterKey, counter, console.log);
 };
 
 /* GET to redirect */
 exports.fetch = function (req, res) {
   var hash = req.params.hash;
-
-  res.json(map[hash]);
+  db.get(hash, function (err, value) {
+    if (err) return res.json(err);
+    res.json(value);
+  });
 };
