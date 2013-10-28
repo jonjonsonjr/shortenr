@@ -3,15 +3,11 @@ var db = levelup('./db');
 var counterKey = '0'; // This won't be a URL key, so it's safe
 var counter = 2;
 
+/* grab counter for next URL input */
 db.get(counterKey, function (err, value) {
   if (err) return console.log(err);
   counter = value;
 });
-
-/* GET home page */
-exports.home = function (req, res) {
-  res.json('Hello, world');
-};
 
 /* POST to create URL */
 exports.create = function (req, res) {
