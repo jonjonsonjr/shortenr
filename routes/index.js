@@ -31,9 +31,12 @@ exports.create = function (req, res) {
 /* GET to redirect */
 exports.fetch = function (req, res) {
   var hash = req.params.hash;
-  db.get(hash, function (err, value) {
-    if (err) return res.json(err);
-    res.json(value);
+  db.get(hash, function (err, url) {
+    if (err) {
+      console.log(err);
+      return res.json(err);
+    }
+    res.redirect(url);
   });
 };
 
@@ -45,13 +48,16 @@ function increment(counter) {
   for (var i = cBits.length - 1; i >= 0; i--) {
     var ch = cBits[i];
 
-    if (ch == '_') {
+    if (ch == bits[bits.length - 1]) {
+      // need to carry
       result = '0' + result;
 
       if (i == 0) {
+        // carry out to new digit
         result = '0' + result;
       }
     } else {
+      // don't need to carry anything else
       result = bits[bitStr.indexOf(ch) + 1] + result;
       return counter.substr(0, i) + result;
     }
