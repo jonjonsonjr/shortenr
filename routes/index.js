@@ -1,7 +1,9 @@
 var levelup = require('level');
 var db = levelup('./db');
 var counterKey = '0'; // This won't be a URL key, so it's safe
-var counter = 2;
+var counter = '1';
+var bitStr = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_';
+var bits = bitStr.split('');
 
 /* grab counter for next URL input */
 db.get(counterKey, function (err, value) {
@@ -12,13 +14,8 @@ db.get(counterKey, function (err, value) {
 /* POST to create URL */
 exports.create = function (req, res) {
   var url = req.body.url;
-  var buf = new Buffer(Math.ceil((Math.log(counter) / Math.log(2) / 8)));
-  buf.fill(counter);
-  var hash = buf.toString('base64');
-  hash = hash.replace(/\+/g, '-');
-  hash = hash.replace(/\//g, '_');
-  hash = hash.replace(/=/g, '');
-  counter++;
+  var hash = counter;
+  counter = increment(counter);
 
   db.put(hash, url, function (err) {
     if (err) {
@@ -39,3 +36,26 @@ exports.fetch = function (req, res) {
     res.json(value);
   });
 };
+
+function increment(counter) {
+  var cBits = counter.split('');
+  var lastCh = cBits[cBits.length - 1];
+  var result = '';
+
+  for (var i = cBits.length - 1; i >= 0; i--) {
+    var ch = cBits[i];
+
+    if (ch == '_') {
+      result = '0' + result;
+
+      if (i == 0) {
+        result = '0' + result;
+      }
+    } else {
+      result = bits[bitStr.indexOf(ch) + 1] + result;
+      return counter.substr(0, i) + result;
+    }
+  }
+
+  return result;
+}

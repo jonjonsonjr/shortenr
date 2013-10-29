@@ -20,7 +20,6 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 1000*60*60*24*14 }));
 
 // routes
-app.get('/', routes.home);
 app.post('/', routes.create);
 app.get('/:hash', routes.fetch);
 
