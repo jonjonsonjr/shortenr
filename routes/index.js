@@ -22,7 +22,7 @@ exports.create = function (req, res) {
       console.log(err);
     }
 
-    res.json('http://localhost:3000/' + hash);
+    res.json({ url: 'http://localhost:3000/' + hash });
   });
 
   db.put(counterKey, counter, console.log);

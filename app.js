@@ -10,6 +10,7 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.logger());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
+app.use(express.static('public'));
 app.use(app.router);
 
 // routes
